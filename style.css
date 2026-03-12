@@ -1,13 +1,15 @@
 body{
-font-family:Arial;
+font-family:Arial, sans-serif;
 background:#0f172a;
 color:white;
 text-align:center;
 margin:0;
+padding:0;
 }
 
 h1{
 margin-top:30px;
+font-size:32px;
 }
 
 .tag{
@@ -20,21 +22,31 @@ background:#1e293b;
 margin:20px;
 padding:20px;
 border-radius:12px;
+box-shadow:0 6px 20px rgba(0,0,0,0.3);
+}
+
+select{
+padding:10px;
+border-radius:8px;
+border:none;
+font-size:16px;
 }
 
 button{
 padding:12px 20px;
 margin:10px;
 border:none;
-border-radius:8px;
+border-radius:10px;
 font-size:16px;
 cursor:pointer;
 background:#3b82f6;
 color:white;
+transition:0.2s;
 }
 
 button:hover{
 background:#2563eb;
+transform:scale(1.05);
 }
 
 .hidden{
@@ -46,12 +58,13 @@ background:#020617;
 padding:15px;
 border-radius:10px;
 text-align:left;
-max-height:200px;
-overflow:auto;
+max-height:250px;
+overflow-y:auto;
 }
 
 .chat p{
 margin:6px 0;
+font-size:14px;
 }
 
 .ad{
@@ -59,17 +72,24 @@ margin-top:15px;
 padding:15px;
 background:#334155;
 border-radius:10px;
-font-size:14px;
+font-size:13px;
 color:#cbd5f5;
 }
 
 .timer{
 margin-bottom:10px;
 color:#22c55e;
+font-size:14px;
+}
+
+.small{
+font-size:13px;
+color:#94a3b8;
 }
 
 footer{
 margin-top:30px;
+padding:20px;
 font-size:12px;
 color:#94a3b8;
 }
