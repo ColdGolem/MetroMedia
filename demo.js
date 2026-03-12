@@ -1,5 +1,4 @@
-
-const demoMessages=[
+const demoMessages = [
 
 "Anyone getting down at Karol Bagh?",
 "Blue line delayed today",
@@ -7,25 +6,28 @@ const demoMessages=[
 "Rajiv Chowk insane rush",
 "Next train maybe empty",
 "Someone dropped a bottle here",
-"Train empty after Mandi House"
+"Train empty after Mandi House",
+"Door side space available",
+"Which station is next?",
+"Coach near gate less crowded"
 
 ];
 
 function randomMessage(){
 
-const chat=document.getElementById("chatBox");
+const chat = document.getElementById("chatBox");
 
 if(!chat) return;
 
-const msg=document.createElement("p");
+const msg = document.createElement("p");
 
-msg.textContent=
-"Seat "+Math.floor(Math.random()*60)+": "+
+msg.textContent =
+"Seat " + Math.floor(Math.random()*60) + ": " +
 demoMessages[Math.floor(Math.random()*demoMessages.length)];
 
 chat.appendChild(msg);
 
-chat.scrollTop=chat.scrollHeight;
+chat.scrollTop = chat.scrollHeight;
 
 }
 
