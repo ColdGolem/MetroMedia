@@ -3,90 +3,87 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MetroPulse 🚇</title>
-<link rel="stylesheet" href="style.css">
-
-<!-- PWA manifest -->
+<title>MetroPulse</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0f172a">
-
-<!-- ADSENSE (Enable later) -->
-<!--
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=YOUR_ADSENSE_ID" crossorigin="anonymous"></script>
--->
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<h1>🚇 MetroPulse</h1>
-<p class="tag">Live commuter chat</p>
+<!-- =========================
+     Landing Page: Line Selection + Crowd Status
+     Instructions:
+     - Users select line and report crowd
+     - Watch ad to move forward
+========================= -->
+<div id="landing" class="card">
+  <h1>MetroPulse</h1>
+  <p class="tag">Select your metro line and report crowd status</p>
+  
+  <select id="metro-line">
+    <option value="blue">Blue Line</option>
+    <option value="red">Red Line</option>
+    <option value="green">Green Line</option>
+  </select>
 
-<!-- STEP 1: Select Metro Line -->
-<div class="card" id="lineCard">
-<h2>Select Metro Line</h2>
-<select id="line">
-<option>Blue Line</option>
-<option>Yellow Line</option>
-<option>Pink Line</option>
-<option>Purple Line</option>
-</select>
-<br>
-<button onclick="selectLine()">Next ➡️</button>
+  <div style="margin-top:15px;">
+    <button id="btn-empty">Empty</button>
+    <button id="btn-normal">Normal</button>
+    <button id="btn-crowded">Crowded</button>
+  </div>
+
+  <div id="crowd-status" class="status empty">Current status: Empty</div>
+
+  <p class="small">Watch an ad to continue</p>
+  <button id="watch-ad">Watch Ad</button>
 </div>
 
-<!-- STEP 2: Report Crowd / Queries -->
-<div class="card hidden" id="crowdCard">
-<h2>Crowd Status / Queries</h2>
-<p>How crowded is your coach?</p>
-<button onclick="report('empty')">👍 Empty</button>
-<button onclick="report('normal')">😐 Normal</button>
-<button onclick="report('packed')">😵 Packed</button>
+<!-- =========================
+     Access Selection Page
+     Instructions:
+     - Choose free (read-only) or paid (full chat)
+     - Free timer limited to 10 min
+     - Paid resets at 12:00am
+========================= -->
+<div id="accessSelection" class="card hidden">
+  <h2>Access Chat</h2>
+  <p class="tag">Choose your option</p>
+  
+  <button id="btn-pay">Pay ₹10 for full chat</button>
+  <button id="btn-free">Watch Ad – Read Only 10 min</button>
+  
+  <p class="small">Free users get back here when time is over</p>
 </div>
 
-<!-- STEP 3: Unlock / Watch Ad / Chat -->
-<div id="unlockBox" class="card hidden">
-<h2>Enter Chat</h2>
-<button onclick="watchAd()">🎬 Watch Ad</button>
-<p class="small">Watch ad to read live chat</p>
+<!-- =========================
+     Chat Screen
+     Instructions:
+     - Chat screen with crowd indicator
+     - Free users limited by timer
+     - Paid users have full day access
+========================= -->
+<div id="chatScreen" class="card hidden">
+  <h2>Metro Chat</h2>
+  <div id="crowd-status-chat" class="status empty">Current status: Empty</div>
+  
+  <div class="chat" id="chatBox">
+    <!-- Chat messages will appear here -->
+    <p>Welcome to MetroPulse chat! Share info and updates.</p>
+  </div>
 </div>
 
-<div id="chatArea" class="card hidden">
-<h2>Live Chat</h2>
-<div id="timer" class="timer"></div>
-
-<div class="chat" id="chatBox">
-<!-- Demo messages inserted by demo.js -->
-</div>
-
-<div class="ad">
-Free users must watch ads to read chat.
-<!--
-<ins class="adsbygoogle"
-style="display:block"
-data-ad-client="YOUR_ADSENSE_ID"
-data-ad-slot="YOUR_SLOT_ID"
-data-ad-format="auto"></ins>
-<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
--->
-</div>
-
-<button onclick="payChat()">💬 Unlock Chat ₹10</button>
-</div>
-
+<!-- =========================
+     Footer
+========================= -->
 <footer>
-MetroPulse Prototype<br>Contact: hello@metropulse.app
+  Demo PWA - MetroPulse | Sketchy UI 2026
 </footer>
 
-<!-- Scripts -->
-<script src="script.js"></script>
+<!-- =========================
+     JS
+     Instructions:
+     - All core logic
+     - AdMob / Razorpay commented placeholders ready for deployment
+========================= -->
 <script src="demo.js"></script>
-
-<!-- Service Worker Registration -->
-<script>
-if("serviceWorker" in navigator){
-    navigator.serviceWorker.register("service-worker.js");
-}
-</script>
-
 </body>
 </html>
