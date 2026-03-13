@@ -11,7 +11,7 @@
 <!-- PAGE 1: City + Line Selection -->
 <div id="page1" class="page active">
   <h1 class="sketch-title">Metro Chat</h1>
-  
+
   <label>Select City:</label>
   <select id="citySelect">
     <option value="delhi">Delhi</option>
@@ -23,7 +23,7 @@
 
   <label>Select Line:</label>
   <select id="lineSelect">
-    <!-- Options dynamically filled based on city -->
+    <!-- Filled dynamically -->
   </select>
 
   <label>Status:</label>
@@ -33,14 +33,15 @@
 
   <!-- Small floating ad banner (Page 1) -->
   <div class="ad-banner">
-    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
+    <!-- Example AdSense placeholder -->
     <!-- <ins class="adsbygoogle" style="display:block" data-ad-client="YOUR-ADSENSE-ID" data-ad-slot="1234567890" data-ad-format="auto"></ins> -->
+    Ad Banner Here
   </div>
 </div>
 
 <!-- PAGE 2: Chat Overlay + Access -->
 <div id="page2" class="page">
-  <!-- Chat screen (blurred initially under overlay) -->
+  <!-- Chat container (blurred initially) -->
   <div id="chatContainer" class="chat-container blurred">
     <div id="messages" class="messages"></div>
     <div id="typingArea">
@@ -49,7 +50,7 @@
     </div>
   </div>
 
-  <!-- Overlay for access -->
+  <!-- Overlay for access buttons -->
   <div id="accessOverlay" class="overlay">
     <button id="payBtn" class="glowy-button">Pay ₹10 to Chat</button>
     <button id="watchAdBtn" class="glowy-button">Watch Ad - Free 10 min</button>
@@ -57,10 +58,18 @@
 
   <!-- Share button top-right -->
   <div id="shareBtn" class="share-button">
-    <!-- Icons: X, WhatsApp, Copy -->
     <button onclick="shareX()">X</button>
     <button onclick="shareWA()">WhatsApp</button>
     <button onclick="copyLink()">Copy Link</button>
+  </div>
+</div>
+
+<!-- Full-screen Ad Overlay for free users -->
+<div id="adOverlay" class="overlay">
+  <div class="ad-content">
+    <p class="ad-text">Your Ad Here</p>
+    <!-- <ins class="adsbygoogle" style="display:block" data-ad-client="YOUR-ADSENSE-ID" data-ad-slot="1234567890" data-ad-format="auto"></ins> -->
+    <button id="closeAdBtn" class="glowy-button">Done</button>
   </div>
 </div>
 
