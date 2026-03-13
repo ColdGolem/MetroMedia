@@ -1,148 +1,119 @@
-//////////////////////////////
-// Metro Chat PWA - app.js //
-//////////////////////////////
+// app.js
 
-// ===== Variables =====
+// Free user timer = 3 minutes
+let freeTime = 3 * 60; // 3 min in seconds
+
+// Example cities and lines
 const cities = {
-  delhi: ["Blue", "Yellow", "Red", "Violet", "Pink"],
-  bangalore: ["Purple", "Green", "Yellow"],
-  mumbai: ["Red", "Blue", "Green"],
-  kolkata: ["Blue", "Green", "Red"],
-  pune: ["Purple", "Orange"]
+  Delhi: ["Blue", "Yellow", "Red", "Violet", "Pink"],
+  Bangalore: ["Purple", "Green", "Yellow"],
+  Mumbai: ["Red", "Blue", "Green"]
 };
 
+// DOM Elements
+const citySelect = document.getElementById("city");
+const lineSelect = document.getElementById("line");
+const startBtn = document.getElementById("startBtn");
 const page1 = document.getElementById("page1");
 const page2 = document.getElementById("page2");
-const citySelect = document.getElementById("citySelect");
-const lineSelect = document.getElementById("lineSelect");
-const statusInput = document.getElementById("statusInput");
-const proceedBtn = document.getElementById("proceedBtn");
-
-const chatContainer = document.getElementById("chatContainer");
-const messagesDiv = document.getElementById("messages");
-const chatInput = document.getElementById("chatInput");
-const sendBtn = document.getElementById("sendBtn");
-
-const accessOverlay = document.getElementById("accessOverlay");
-const payBtn = document.getElementById("payBtn");
 const watchAdBtn = document.getElementById("watchAdBtn");
+const payBtn = document.getElementById("payBtn");
+const chatContainer = document.getElementById("chatContainer");
+const overlay = document.getElementById("overlay");
+const shareBtn = document.getElementById("shareBtn");
 
-const adOverlay = document.getElementById("adOverlay");
-const closeAdBtn = document.getElementById("closeAdBtn");
+// Populate cities
+Object.keys(cities).forEach(city => {
+  let option = document.createElement("option");
+  option.value = city;
+  option.textContent = city;
+  citySelect.appendChild(option);
+});
 
-// ===== Share button variables =====
-const appLink = "https://your-pwa-url.vercel.app";
-
-// ===== User state =====
-let currentUser = { paid: false, freeTimer: 0 };
-let timerInterval;
-let selectedCity, selectedLine;
-
-// ===== Functions =====
-
-// Populate line options based on selected city
-function updateLines() {
-  const lines = cities[citySelect.value] || [];
+// Populate lines based on selected city
+function populateLines() {
   lineSelect.innerHTML = "";
-  lines.forEach(line => {
-    const option = document.createElement("option");
-    option.value = line.toLowerCase();
+  cities[citySelect.value].forEach(line => {
+    let option = document.createElement("option");
+    option.value = line;
     option.textContent = line;
     lineSelect.appendChild(option);
   });
 }
 
-// Show overlay for paid/free access
+citySelect.addEventListener("change", populateLines);
+populateLines();
+
+// Start button
+startBtn.addEventListener("click", () => {
+  page1.style.display = "none";
+  page2.style.display = "block";
+
+  // Overlay logic: free users see ad overlay, paid users skip
+  if (!localStorage.getItem(`${citySelect.value}-${lineSelect.value}-paid`)) {
+    showOverlay();
+  } else {
+    startChat(true);
+  }
+});
+
+// Overlay functions
 function showOverlay() {
-  chatContainer.classList.add("blurred");
-  accessOverlay.style.display = "flex";
-  sendBtn.disabled = true;
+  overlay.style.display = "block";
+  chatContainer.innerHTML = ""; // chat blurred behind
 }
 
-// Start 10-min timer for free users
-function startFreeTimer(minutes) {
-  currentUser.freeTimer = minutes * 60;
-  sendBtn.disabled = true;
-  chatContainer.classList.remove("blurred");
+watchAdBtn.addEventListener("click", () => {
+  overlay.style.display = "none";
+  startChat(false); // free read-only
+  logSession("free");
+  startFreeTimer();
+});
 
-  timerInterval = setInterval(() => {
-    currentUser.freeTimer--;
-    if (currentUser.freeTimer <= 0) {
-      clearInterval(timerInterval);
-      showOverlay(); // back to overlay after 10 min
+payBtn.addEventListener("click", () => {
+  overlay.style.display = "none";
+  startChat(true); // full access
+  localStorage.setItem(`${citySelect.value}-${lineSelect.value}-paid`, true);
+  logSession("paid");
+});
+
+function startChat(isPaid) {
+  chatContainer.innerHTML = `<p>Metromedia Live Chat (${isPaid ? "Full Access" : "Read Only"})</p>`;
+}
+
+// Free timer
+function startFreeTimer() {
+  let timer = freeTime;
+  const interval = setInterval(() => {
+    timer--;
+    if (timer <= 0) {
+      clearInterval(interval);
+      showOverlay();
     }
   }, 1000);
 }
 
-// Append chat message
-function appendMessage(sender, text) {
-  const div = document.createElement("div");
-  div.className = "message";
-  div.innerHTML = `<b>${sender}:</b> ${text}`;
-  messagesDiv.appendChild(div);
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+// Share button
+shareBtn.addEventListener("click", () => {
+  const url = window.location.href;
+  if (navigator.share) {
+    navigator.share({ title: "Metromedia", url });
+  } else {
+    navigator.clipboard.writeText(url);
+    alert("Metromedia link copied!");
+  }
+});
+
+// Logging function
+function logSession(type) {
+  fetch("/api/logSession", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      city: citySelect.value,
+      line: lineSelect.value,
+      type: type,
+      timestamp: new Date().toISOString()
+    })
+  });
 }
-
-// ===== Event Listeners =====
-
-// Page 1 → Page 2
-proceedBtn.addEventListener("click", () => {
-  selectedCity = citySelect.value;
-  selectedLine = lineSelect.value;
-  if (!selectedLine) return alert("Select a line!");
-  page1.classList.remove("active");
-  page2.classList.add("active");
-  showOverlay();
-});
-
-// Paid user click
-payBtn.addEventListener("click", () => {
-  currentUser.paid = true;
-  clearInterval(timerInterval);
-  accessOverlay.style.display = "none";
-  chatContainer.classList.remove("blurred");
-  sendBtn.disabled = false;
-});
-
-// Free user click → show ad overlay
-watchAdBtn.addEventListener("click", () => {
-  adOverlay.style.display = "flex";
-  chatContainer.classList.add("blurred");
-});
-
-// Close ad → start free 10-min chat
-closeAdBtn.addEventListener("click", () => {
-  adOverlay.style.display = "none";
-  chatContainer.classList.remove("blurred");
-  startFreeTimer(10);
-});
-
-// Send chat message
-sendBtn.addEventListener("click", () => {
-  const msg = chatInput.value.trim();
-  if (!msg) return;
-  appendMessage("You", msg);
-  chatInput.value = "";
-  // TODO: send to backend / Telegram for live chat
-});
-
-// Share buttons
-function shareX() {
-  const text = encodeURIComponent("Check out MetroMedia chat PWA! 🚇 " + appLink);
-  window.open(`https://x.com/intent/tweet?text=${text}`, "_blank");
-}
-
-function shareWA() {
-  const text = encodeURIComponent("Check out MetroMedia chat PWA! 🚇 " + appLink);
-  window.open(`https://wa.me/?text=${text}`, "_blank");
-}
-
-function copyLink() {
-  navigator.clipboard.writeText(appLink)
-    .then(() => alert("Link copied! Share it with friends 🚀"))
-    .catch(() => alert("Copy failed. Try manually!"));
-}
-
-// Initialize lines
-updateLines();
-citySelect.addEventListener("change", updateLines);
