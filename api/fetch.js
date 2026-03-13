@@ -1,10 +1,11 @@
-// /api/fetch.js
-import { messagesDB } from './db';
+// fetch.js
+let chatDatabase = {}; // must match send.js in real backend or use DB
 
-export default function handler(req, res) {
-  const line = req.query.line;
-  if (!line) return res.status(400).json({ error: 'Missing line parameter' });
+export default async function handler(req, res) {
+  const { city, line } = req.query;
+  if (!city || !line) return res.status(400).json({error:'Missing parameters'});
 
-  const messages = messagesDB[line] || [];
-  res.status(200).json({ messages });
+  const key = `${city}_${line}`;
+  const messages = chatDatabase[key] || [];
+  res.status(200).json({messages});
 }
