@@ -1,8 +1,11 @@
-// /api/crowd.js
-export default function handler(req, res) {
-  const line = req.query.line || 'unknown';
-  const statusOptions = ['Low', 'Medium', 'High', 'Very High'];
-  const status = statusOptions[Math.floor(Math.random() * statusOptions.length)];
+// crowd.js
+export default async function handler(req, res) {
+  const { city, line } = req.query;
+  if (!city || !line) return res.status(400).json({error:'Missing parameters'});
 
-  res.status(200).json({ status });
+  // For demo: random crowd status
+  const statuses = ["Low", "Medium", "High", "Very Crowded"];
+  const status = statuses[Math.floor(Math.random()*statuses.length)];
+
+  res.status(200).json({status});
 }
