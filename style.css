@@ -1,35 +1,13 @@
-/* =========================
-   MetroPulse 2026 Sketchy CSS
-   Author: Generated
-   ========================= */
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
 /* --- Body / Background --- */
 body{
   font-family: 'Inter', sans-serif;
-  background-color: #ffffff;
-
-  /* Subtle pencil sketch crosshatch */
-  background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='0' y1='0' x2='10' y2='10' stroke='%23cccccc' stroke-width='0.5'/%3E%3Cline x1='0' y1='10' x2='10' y2='0' stroke='%23cccccc' stroke-width='0.5'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 20px 20px;
-
+  background-color: #ffffff; /* pure white background */
   color:#111;
   text-align:center;
   margin:0;
   padding:0;
-}
-
-/* Optional noise overlay for extra texture */
-body::before {
-  content: "";
-  position: fixed;
-  top:0; left:0; width:100%; height:100%;
-  pointer-events: none;
-  background: url('noise.png') repeat;
-  opacity:0.05; /* subtle */
-  z-index: 0;
 }
 
 /* --- Typography --- */
@@ -163,5 +141,3 @@ footer{
   font-size:12px;
   color:#333;
   border-top: 3px solid #000;
-  box-shadow: 2px 2px 0px #000;
-}
