@@ -1,124 +1,85 @@
-// ====== Elements ======
-const landing = document.getElementById('landing');
+let currentLine = 'blue'; // default selected line
+let userId = `user_${Date.now()}_${Math.floor(Math.random()*1000)}`; // unique per visitor
+let isPaidUser = false;
+let freeTimer = 10 * 60; // 10 min for free users in seconds
+
 const lineSelect = document.getElementById('lineSelect');
 const proceedBtn = document.getElementById('proceedBtn');
-const crowdStatus = document.getElementById('crowdStatus');
-
-const access = document.getElementById('access');
+const accessDiv = document.getElementById('access');
 const payBtn = document.getElementById('payBtn');
 const adBtn = document.getElementById('adBtn');
-const timerDisplay = document.getElementById('timer');
-
 const chatScreen = document.getElementById('chatScreen');
 const chatMessages = document.getElementById('chatMessages');
 const messageInput = document.getElementById('messageInput');
 const sendBtn = document.getElementById('sendBtn');
-const lineName = document.getElementById('lineName');
-const crowdDisplay = document.getElementById('crowdDisplay');
 
-// ====== State ======
-let selectedLine = '';
-let freeTimer = null;
-let isPaid = false;
+sendBtn.disabled = true; // default disabled
 
-// ====== Landing Page Flow ======
-proceedBtn.addEventListener('click', () => {
-  selectedLine = lineSelect.value;
-  lineName.innerText = selectedLine.charAt(0).toUpperCase() + selectedLine.slice(1) + ' Line';
-  updateCrowdStatus();
-  landing.classList.add('hidden');
-  access.classList.remove('hidden');
-});
-
-// ====== Access Flow ======
-payBtn.addEventListener('click', () => {
-  startPaidChat();
-});
-
-adBtn.addEventListener('click', async () => {
-  // TODO: Integrate AdMob / rewarded ad here
-  alert('Ad placeholder — after watching ad you can read chat for 10 min.');
-  startFreeChat();
-});
-
-// ====== Free User Flow ======
-function startFreeChat() {
-  sendBtn.disabled = true;
-  access.classList.add('hidden');
-  chatScreen.classList.remove('hidden');
-
-  let timeLeft = 10 * 60; // 10 minutes
-  timerDisplay.innerText = `Time left: 10:00`;
-
-  freeTimer = setInterval(() => {
-    timeLeft--;
-    const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
-    const sec = String(timeLeft % 60).padStart(2, '0');
-    timerDisplay.innerText = `Time left: ${min}:${sec}`;
-
-    if (timeLeft <= 0) {
-      clearInterval(freeTimer);
-      alert('10 minutes over! Choose access again.');
-      chatScreen.classList.add('hidden');
-      access.classList.remove('hidden');
-    }
-  }, 1000);
-
-  loadChat();
+// ---------------------------
+// Helper functions
+// ---------------------------
+function updateChatUI(messages) {
+  chatMessages.innerHTML = messages.map(m => `<div>${m.message}</div>`).join('');
 }
 
-// ====== Paid User Flow ======
-function startPaidChat() {
-  isPaid = true;
-  sendBtn.disabled = false;
-  access.classList.add('hidden');
-  chatScreen.classList.remove('hidden');
-  timerDisplay.innerText = 'Full-day access';
-  loadChat();
+async function fetchMessages() {
+  const res = await fetch(`/api/fetch?line=${currentLine}`);
+  const data = await res.json();
+  updateChatUI(data.messages);
 }
 
-// ====== Chat ======
-sendBtn.addEventListener('click', async () => {
+async function sendMessage() {
   const msg = messageInput.value.trim();
   if (!msg) return;
 
-  // Call backend placeholder
-  await fetch(`/api/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ line: selectedLine, message: msg })
+  const res = await fetch('/api/send', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({line: currentLine, message: msg, userId})
   });
+  const data = await res.json();
+  if (data.error) return alert(data.error);
 
   messageInput.value = '';
-  await loadChat();
+}
+
+// Countdown display for free users
+function updateFreeCountdown() {
+  if (!isPaidUser && freeTimer > 0) {
+    const min = Math.floor(freeTimer/60);
+    const sec = freeTimer%60;
+    sendBtn.innerText = `Read-only (${min}:${sec.toString().padStart(2,'0')})`;
+  }
+}
+
+// ---------------------------
+// Polling for real-time messages
+// ---------------------------
+setInterval(fetchMessages, 2000);
+
+setInterval(() => {
+  if (!isPaidUser && freeTimer > 0) freeTimer--;
+  if (!isPaidUser && freeTimer <= 0) {
+    alert('Free read-only session ended. Pay or watch ad to continue.');
+    chatScreen.style.display = 'none';
+    accessDiv.style.display = 'block';
+  }
+  updateFreeCountdown();
+}, 1000);
+
+// ---------------------------
+// Event listeners
+// ---------------------------
+proceedBtn.addEventListener('click', () => {
+  currentLine = lineSelect.value;
+  accessDiv.style.display = 'block';
 });
 
-async function loadChat() {
-  // Fetch messages from backend placeholder
-  const res = await fetch(`/api/getMessages?line=${selectedLine}`);
+adBtn.addEventListener('click', async () => {
+  // Free read-only session
+  const res = await fetch(`/api/access?userId=${userId}&line=${currentLine}&type=free`);
   const data = await res.json();
-  chatMessages.innerHTML = '';
-
-  data.messages.forEach(m => {
-    const p = document.createElement('p');
-    p.innerText = m;
-    chatMessages.appendChild(p);
-  });
-
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-// ====== Crowd Status ======
-async function updateCrowdStatus() {
-  // Placeholder: Fetch from backend
-  const res = await fetch(`/api/updateCrowd?line=${selectedLine}`);
-  const data = await res.json();
-  crowdStatus.innerText = `Crowd status: ${data.status}`;
-  crowdDisplay.innerText = `Crowd: ${data.status}`;
-}
-
-// ====== Auto-refresh chat every 5 sec ======
-setInterval(() => {
-  if (chatScreen.classList.contains('hidden')) return;
-  loadChat();
-}, 5000);
+  isPaidUser = false;
+  freeTimer = data.expiresIn;
+  accessDiv.style.display = 'none';
+  chatScreen.style
