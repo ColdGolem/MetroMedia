@@ -1,9 +1,5 @@
-// In-memory message storage
-let messagesDB = {
-  blue: [],
-  red: [],
-  green: []
-};
+// /api/fetch.js
+import { messagesDB } from './db';
 
 export default function handler(req, res) {
   const line = req.query.line;
