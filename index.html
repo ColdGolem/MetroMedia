@@ -3,44 +3,65 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MetroMedia Chat</title>
+<title>Metro Chat PWA</title>
 <link rel="stylesheet" href="style.css">
-
-<!-- AdSense placeholder -->
-<!-- <script data-ad-client="YOUR-ADSENSE-CLIENT-ID" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
 </head>
 <body>
 
-<h2>Select Your City</h2>
-<select id="citySelect">
-  <option value="delhi">Delhi</option>
-  <option value="bangalore">Bangalore</option>
-  <option value="mumbai">Mumbai</option>
-  <option value="hyderabad">Hyderabad</option>
-  <option value="chennai">Chennai</option>
-  <option value="kolkata">Kolkata</option>
-  <option value="ahmedabad">Ahmedabad</option>
-  <option value="lucknow">Lucknow</option>
-  <option value="jaipur">Jaipur</option>
-  <option value="noida">Noida</option>
-  <option value="nagpur">Nagpur</option>
-  <option value="pune">Pune</option>
-  <option value="kochi">Kochi</option>
-</select>
+<!-- PAGE 1: City + Line Selection -->
+<div id="page1" class="page active">
+  <h1 class="sketch-title">Metro Chat</h1>
+  
+  <label>Select City:</label>
+  <select id="citySelect">
+    <option value="delhi">Delhi</option>
+    <option value="bangalore">Bangalore</option>
+    <option value="mumbai">Mumbai</option>
+    <option value="kolkata">Kolkata</option>
+    <option value="pune">Pune</option>
+  </select>
 
-<h2>Select Metro Line</h2>
-<select id="lineSelect"></select>
-<button id="proceedBtn">Proceed</button>
+  <label>Select Line:</label>
+  <select id="lineSelect">
+    <!-- Options dynamically filled based on city -->
+  </select>
 
-<div id="access" style="display:none; margin-top:20px;">
-  <button id="payBtn">Pay ₹10 for Full-Day Chat (Any Line)</button>
-  <button id="adBtn">Watch Ad for 10-min Read-Only (Selected Line)</button>
+  <label>Status:</label>
+  <input type="text" id="statusInput" placeholder="Your current status">
+
+  <button id="proceedBtn" class="sketch-button">Proceed</button>
+
+  <!-- Small floating ad banner (Page 1) -->
+  <div class="ad-banner">
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
+    <!-- <ins class="adsbygoogle" style="display:block" data-ad-client="YOUR-ADSENSE-ID" data-ad-slot="1234567890" data-ad-format="auto"></ins> -->
+  </div>
 </div>
 
-<div id="chatScreen" style="display:none; margin-top:20px;">
-  <div id="chatMessages" style="height:300px; overflow-y:auto; border:1px solid #000;"></div>
-  <input id="messageInput" placeholder="Type message" style="width:80%;">
-  <button id="sendBtn">Send</button>
+<!-- PAGE 2: Chat Overlay + Access -->
+<div id="page2" class="page">
+  <!-- Chat screen (blurred initially under overlay) -->
+  <div id="chatContainer" class="chat-container blurred">
+    <div id="messages" class="messages"></div>
+    <div id="typingArea">
+      <input type="text" id="chatInput" placeholder="Type a message...">
+      <button id="sendBtn" disabled>Send</button>
+    </div>
+  </div>
+
+  <!-- Overlay for access -->
+  <div id="accessOverlay" class="overlay">
+    <button id="payBtn" class="glowy-button">Pay ₹10 to Chat</button>
+    <button id="watchAdBtn" class="glowy-button">Watch Ad - Free 10 min</button>
+  </div>
+
+  <!-- Share button top-right -->
+  <div id="shareBtn" class="share-button">
+    <!-- Icons: X, WhatsApp, Copy -->
+    <button onclick="shareX()">X</button>
+    <button onclick="shareWA()">WhatsApp</button>
+    <button onclick="copyLink()">Copy Link</button>
+  </div>
 </div>
 
 <script src="app.js"></script>
