@@ -1,3 +1,4 @@
+// In-memory message storage
 let messagesDB = {
   blue: [],
   red: [],
@@ -12,6 +13,9 @@ export default function handler(req, res) {
 
   if (!messagesDB[line]) messagesDB[line] = [];
   messagesDB[line].push(message);
+
+  // Example: Use secret if needed
+  const razorpayKey = process.env.RAZORPAY_KEY;
 
   res.status(200).json({ success: true });
 }
