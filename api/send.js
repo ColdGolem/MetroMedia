@@ -1,4 +1,3 @@
-// /api/send.js
 import { messagesDB, sessionsDB } from './db';
 
 export default function handler(req, res) {
@@ -10,10 +9,16 @@ export default function handler(req, res) {
   const session = sessionsDB[userId];
   if (!session) return res.status(403).json({ error: 'No active session' });
 
-  // Check if user is allowed to send
+  // Free users cannot send at all
+  if (session.type === 'free') {
+    return res.status(403).json({ error: 'Free users can only read messages' });
+  }
+
+  // Paid users can send if their session is still valid
   const now = Date.now();
-  if (session.type === 'free' && now - session.startTime > 10 * 60 * 1000)
-    return res.status(403).json({ error: 'Free session expired' });
+  if (session.type === 'paid' && session.expiresAt && now > session.expiresAt) {
+    return res.status(403).json({ error: 'Paid session expired' });
+  }
 
   if (!messagesDB[line]) messagesDB[line] = [];
   messagesDB[line].push({ userId, message, time: now });
