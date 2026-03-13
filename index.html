@@ -1,89 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MetroPulse</title>
-<link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MetroPulse</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
-
-<!-- =========================
-     Landing Page: Line Selection + Crowd Status
-     Instructions:
-     - Users select line and report crowd
-     - Watch ad to move forward
-========================= -->
-<div id="landing" class="card">
-  <h1>MetroPulse</h1>
-  <p class="tag">Select your metro line and report crowd status</p>
-  
-  <select id="metro-line">
-    <option value="blue">Blue Line</option>
-    <option value="red">Red Line</option>
-    <option value="green">Green Line</option>
-  </select>
-
-  <div style="margin-top:15px;">
-    <button id="btn-empty">Empty</button>
-    <button id="btn-normal">Normal</button>
-    <button id="btn-crowded">Crowded</button>
+  <!-- Landing / Line Selection -->
+  <div id="landing">
+    <h1>MetroPulse</h1>
+    <label for="lineSelect">Select your metro line:</label>
+    <select id="lineSelect">
+      <option value="blue">Blue Line</option>
+      <option value="red">Red Line</option>
+      <option value="green">Green Line</option>
+    </select>
+    <button id="proceedBtn">Proceed</button>
+    <div id="crowdStatus">Crowd status: Unknown</div>
   </div>
 
-  <div id="crowd-status" class="status empty">Current status: Empty</div>
-
-  <p class="small">Watch an ad to continue</p>
-  <button id="watch-ad">Watch Ad</button>
-</div>
-
-<!-- =========================
-     Access Selection Page
-     Instructions:
-     - Choose free (read-only) or paid (full chat)
-     - Free timer limited to 10 min
-     - Paid resets at 12:00am
-========================= -->
-<div id="accessSelection" class="card hidden">
-  <h2>Access Chat</h2>
-  <p class="tag">Choose your option</p>
-  
-  <button id="btn-pay">Pay ₹10 for full chat</button>
-  <button id="btn-free">Watch Ad – Read Only 10 min</button>
-  
-  <p class="small">Free users get back here when time is over</p>
-</div>
-
-<!-- =========================
-     Chat Screen
-     Instructions:
-     - Chat screen with crowd indicator
-     - Free users limited by timer
-     - Paid users have full day access
-========================= -->
-<div id="chatScreen" class="card hidden">
-  <h2>Metro Chat</h2>
-  <div id="crowd-status-chat" class="status empty">Current status: Empty</div>
-  
-  <div class="chat" id="chatBox">
-    <!-- Chat messages will appear here -->
-    <p>Welcome to MetroPulse chat! Share info and updates.</p>
+  <!-- Access Selection -->
+  <div id="access" class="hidden">
+    <h2>Access Options</h2>
+    <button id="payBtn">Pay ₹10 for full-day chat</button>
+    <button id="adBtn">Watch ad for 10-min read-only</button>
+    <div id="timer"></div>
   </div>
-</div>
 
-<!-- =========================
-     Footer
-========================= -->
-<footer>
-  Demo PWA - MetroPulse | Sketchy UI 2026
-</footer>
+  <!-- Chat Screen -->
+  <div id="chatScreen" class="hidden">
+    <div id="chatHeader">
+      <h2 id="lineName">Line Name</h2>
+      <div id="crowdDisplay">Crowd: Unknown</div>
+    </div>
+    <div id="chatMessages"></div>
+    <div id="chatInput">
+      <input type="text" id="messageInput" placeholder="Type your message...">
+      <button id="sendBtn">Send</button>
+    </div>
+  </div>
 
-<!-- =========================
-     JS
-     Instructions:
-     - All core logic
-     - AdMob / Razorpay commented placeholders ready for deployment
-========================= -->
-<script src="demo.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
