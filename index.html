@@ -1,78 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Metro Chat PWA</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metromedia</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header>
+    <h1>Welcome to Metromedia</h1>
+  </header>
 
-<!-- PAGE 1: City + Line Selection -->
-<div id="page1" class="page active">
-  <h1 class="sketch-title">Metro Chat</h1>
+  <main>
+    <section id="page1">
+      <label for="city">Select City:</label>
+      <select id="city"></select>
 
-  <label>Select City:</label>
-  <select id="citySelect">
-    <option value="delhi">Delhi</option>
-    <option value="bangalore">Bangalore</option>
-    <option value="mumbai">Mumbai</option>
-    <option value="kolkata">Kolkata</option>
-    <option value="pune">Pune</option>
-  </select>
+      <label for="line">Select Line:</label>
+      <select id="line"></select>
 
-  <label>Select Line:</label>
-  <select id="lineSelect">
-    <!-- Filled dynamically -->
-  </select>
+      <button id="startBtn">Start Metromedia Chat</button>
 
-  <label>Status:</label>
-  <input type="text" id="statusInput" placeholder="Your current status">
+      <!-- Banner ad on page1 -->
+      <div id="page1Banner" class="ad-banner">
+        <!-- AdSense banner will go here -->
+      </div>
+    </section>
 
-  <button id="proceedBtn" class="sketch-button">Proceed</button>
+    <section id="page2" style="display:none;">
+      <!-- Chat overlay logic handled in app.js -->
+      <div id="chatContainer"></div>
+      <div id="overlay"></div>
+      <button id="watchAdBtn">Watch Ad to Read Only</button>
+      <button id="payBtn">Pay ₹10 for Full Day</button>
 
-  <!-- Small floating ad banner (Page 1) -->
-  <div class="ad-banner">
-    <!-- Example AdSense placeholder -->
-    <!-- <ins class="adsbygoogle" style="display:block" data-ad-client="YOUR-ADSENSE-ID" data-ad-slot="1234567890" data-ad-format="auto"></ins> -->
-    Ad Banner Here
-  </div>
-</div>
+      <!-- Share button -->
+      <button id="shareBtn" title="Share Metromedia">Share</button>
+    </section>
+  </main>
 
-<!-- PAGE 2: Chat Overlay + Access -->
-<div id="page2" class="page">
-  <!-- Chat container (blurred initially) -->
-  <div id="chatContainer" class="chat-container blurred">
-    <div id="messages" class="messages"></div>
-    <div id="typingArea">
-      <input type="text" id="chatInput" placeholder="Type a message...">
-      <button id="sendBtn" disabled>Send</button>
-    </div>
-  </div>
-
-  <!-- Overlay for access buttons -->
-  <div id="accessOverlay" class="overlay">
-    <button id="payBtn" class="glowy-button">Pay ₹10 to Chat</button>
-    <button id="watchAdBtn" class="glowy-button">Watch Ad - Free 10 min</button>
-  </div>
-
-  <!-- Share button top-right -->
-  <div id="shareBtn" class="share-button">
-    <button onclick="shareX()">X</button>
-    <button onclick="shareWA()">WhatsApp</button>
-    <button onclick="copyLink()">Copy Link</button>
-  </div>
-</div>
-
-<!-- Full-screen Ad Overlay for free users -->
-<div id="adOverlay" class="overlay">
-  <div class="ad-content">
-    <p class="ad-text">Your Ad Here</p>
-    <!-- <ins class="adsbygoogle" style="display:block" data-ad-client="YOUR-ADSENSE-ID" data-ad-slot="1234567890" data-ad-format="auto"></ins> -->
-    <button id="closeAdBtn" class="glowy-button">Done</button>
-  </div>
-</div>
-
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
